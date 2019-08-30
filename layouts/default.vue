@@ -20,4 +20,3 @@ img {
   height: auto;
 }
 </style>
-
