@@ -3,7 +3,7 @@
     <h3 class="mb-4">本の一覧</h3>
 
     <ul class="list-unstyled">
-      <b-media no-body v-for="(item, index) in items" tag="li" class="mb-5">
+      <b-media v-for="(item, index) in items" no-body tag="li" class="mb-5">
         <b-media-aside class="align-items-start">
           <b-img slot="aside" width="110" :src="item.imageUrl" alt="" />
         </b-media-aside>
@@ -43,20 +43,22 @@ export default {
   },
 
   mounted() {
-    const db = firebase.firestore();
-    db.collection("books").get().then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        const item = doc.data()
-        item.firebaseId = doc.id
-        this.items.push(item)
+    const db = firebase.firestore()
+    db.collection('books')
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          const item = doc.data()
+          item.firebaseId = doc.id
+          this.items.push(item)
+        })
       })
-    })
   },
 
   methods: {
     getDescription(text) {
       if (text) {
-        return (text.length > 80) ? text.substr(0 , 80) + '…' : text
+        return text.length > 80 ? text.substr(0, 80) + '…' : text
       } else {
         return ''
       }
@@ -65,12 +67,16 @@ export default {
     deleteBook(item, index) {
       const self = this
       const db = firebase.firestore()
-      db.collection("books").doc(item.firebaseId).delete().then(function() {
-        self.items.splice(index, 1)
-        console.log("Document successfully deleted!")
-      }).catch(function(error) {
-        console.error("Error removing document: ", error)
-      })
+      db.collection('books')
+        .doc(item.firebaseId)
+        .delete()
+        .then(function() {
+          self.items.splice(index, 1)
+          console.log('Document successfully deleted!')
+        })
+        .catch(function(error) {
+          console.error('Error removing document: ', error)
+        })
     }
   }
 }
