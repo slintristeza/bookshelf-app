@@ -1,68 +1,77 @@
 <template>
-  <div class="container">
-    <div>
-      <logo />
-      <h1 class="title">
-        bookshelf-app
-      </h1>
-      <h2 class="subtitle">
-        My kickass Nuxt.js project
-      </h2>
-      <div class="links">
-        <a href="https://nuxtjs.org/" target="_blank" class="button--green">
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
-    </div>
-  </div>
+  <section class="container">
+    <h3 class="mb-4">本の一覧</h3>
+
+    <ul class="list-unstyled">
+      <b-media no-body v-for="(item, index) in items" tag="li" class="mb-5">
+        <b-media-aside class="align-items-start">
+          <b-img slot="aside" width="110" :src="item.imageUrl" alt="" />
+        </b-media-aside>
+        <b-media-body class="ml-3">
+          <h4 class="mt-0">{{ item.title }}</h4>
+          <p>{{ getDescription(item.description) }}</p>
+          <p>
+            著者：<template v-for="author in item.authors"
+              >{{ author }} /
+            </template>
+            発売日：{{ item.publishedDate }}
+          </p>
+          <b-button
+            :href="`https://books.google.co.jp/books?id=${item.googleBooksId}`"
+            target="_blank"
+            variant="success"
+            >詳細を見る</b-button
+          >
+          <b-button variant="danger" @click="deleteBook(item, index)"
+            >削除</b-button
+          >
+        </b-media-body>
+      </b-media>
+    </ul>
+  </section>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
+import axios from 'axios'
+import firebase from '~/plugins/firebase'
 
 export default {
-  components: {
-    Logo
+  data() {
+    return {
+      items: []
+    }
+  },
+
+  mounted() {
+    const db = firebase.firestore();
+    db.collection("books").get().then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        const item = doc.data()
+        item.firebaseId = doc.id
+        this.items.push(item)
+      })
+    })
+  },
+
+  methods: {
+    getDescription(text) {
+      if (text) {
+        return (text.length > 80) ? text.substr(0 , 80) + '…' : text
+      } else {
+        return ''
+      }
+    },
+
+    deleteBook(item, index) {
+      const self = this
+      const db = firebase.firestore()
+      db.collection("books").doc(item.firebaseId).delete().then(function() {
+        self.items.splice(index, 1)
+        console.log("Document successfully deleted!")
+      }).catch(function(error) {
+        console.error("Error removing document: ", error)
+      })
+    }
   }
 }
 </script>
-
-<style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
-}
-</style>
