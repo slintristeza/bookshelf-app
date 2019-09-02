@@ -3,7 +3,13 @@
     <h3 class="mb-4">本の一覧</h3>
 
     <ul class="list-unstyled">
-      <b-media v-for="(item, index) in items" no-body tag="li" class="mb-5">
+      <b-media
+        v-for="(item, index) in items"
+        :key="index"
+        no-body
+        tag="li"
+        class="mb-5"
+      >
         <b-media-aside class="align-items-start">
           <b-img slot="aside" width="110" :src="item.imageUrl" alt="" />
         </b-media-aside>
@@ -32,7 +38,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import firebase from '~/plugins/firebase'
 
 export default {
