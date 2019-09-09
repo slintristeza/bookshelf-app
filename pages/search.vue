@@ -17,7 +17,13 @@
     </p>
 
     <ul class="list-unstyled">
-      <b-media no-body v-for="(item, index) in items" tag="li" class="mb-5">
+      <b-media
+        v-for="(item, index) in items"
+        :key="index"
+        tag="li"
+        class="mb-5"
+        no-body
+      >
         <b-media-aside class="align-items-start">
           <b-img slot="aside" width="110" :src="item.imageUrl" alt="" />
         </b-media-aside>
@@ -46,7 +52,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import firebase from '~/plugins/firebase'
 
 export default {
