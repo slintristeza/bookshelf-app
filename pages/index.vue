@@ -77,9 +77,11 @@ export default {
         .delete()
         .then(function() {
           self.items.splice(index, 1)
+          // eslint-disable-next-line no-console
           console.log('Document successfully deleted!')
         })
         .catch(function(error) {
+          // eslint-disable-next-line no-console
           console.error('Error removing document: ', error)
         })
     }
