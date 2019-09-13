@@ -94,6 +94,7 @@ export default {
           self.items = response.data.items
         })
         .catch(function(error) {
+          // eslint-disable-next-line no-console
           console.log(error)
         })
     },
@@ -120,9 +121,11 @@ export default {
       db.collection('books')
         .add(book)
         .then(function(docRef) {
+          // eslint-disable-next-line no-console
           console.log('Document written with ID: ', docRef.id)
         })
         .catch(function(error) {
+          // eslint-disable-next-line no-console
           console.error('Error adding document: ', error)
         })
     }
