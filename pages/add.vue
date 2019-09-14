@@ -22,16 +22,15 @@
         class="mb-5"
       >
         <b-media-aside class="align-items-start">
-          <b-img slot="aside" width="110" :src="getItemImage(item)" alt />
+          <b-img slot="aside" width="110" :src="getItemImage(item)" alt="" />
         </b-media-aside>
         <b-media-body class="ml-3">
           <h4 class="mt-0">{{ item.volumeInfo.title }}</h4>
           <p>{{ getDescription(item.volumeInfo.description) }}</p>
           <p>
-            著者：
-            <template v-for="author in item.volumeInfo.authors"
-              >{{ author }} /</template
-            >
+            著者：<template v-for="author in item.volumeInfo.authors"
+              >{{ author }} /
+            </template>
             発売日：{{ item.volumeInfo.publishedDate }}
           </p>
           <b-button variant="primary" @click="addBook(item)"
